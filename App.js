@@ -3,7 +3,7 @@ import { useState, useEffec } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { MyDataProvider } from "./context/AsyncStorage";
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
-import PeopleScreen from "./screens/PeopleScreen";
+import PeopleScreen from "./screens/PeopleScreen/PeopleScreen";
 
 export default function App() {
   return (
@@ -12,9 +12,7 @@ export default function App() {
         <SafeAreaView
           style={{ flex: 1 }}
           edges={["right", "bottom", "left", "top"]}
-        >
-          <PeopleScreen />
-        </SafeAreaView>
+        ></SafeAreaView>
       </SafeAreaProvider>
     </MyDataProvider>
   );
