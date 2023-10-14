@@ -1,49 +1,34 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createContext, useState, useContext, useEffect } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-// function to save data
-const storageData = async (newValue) => {
-  try {
-    const jsonValue = JSON.stringify(newValue);
-    await AsyncStorage.setItem("Reac_Gifter_App_Storage", jsonValue);
-  } catch (e) {
-    console.log(e);
-  }
-};
-
-// function to get Data
-const getData = async () => {
-  try {
-    const jsonValue = await AsyncStorage.getItem("Reac_Gifter_App_Storage");
-    return jsonValue != null ? JSON.parse(jsonValue) : null;
-  } catch (e) {
-    console.log(e);
-  }
-};
-
-const MyDataContext = createContext();
+const MyDataContext = createContext(); // Create the context object
 
 function MyDataProvider(props) {
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    getData().then((dataResult) => {
-      setData(dataResult);
+    AsyncStorage.getItem("React_Native_App_Gifter").then((list) => {
+      list = list === null ? [] : JSON.parse(list);
+      setData(list);
     });
   }, []);
 
   async function updateStorageData(list) {
-    await storageData(list);
     setData(list);
+    await AsyncStorage.setItem("React_Native_App_Gifter", JSON.stringify(list));
   }
 
   return (
-    <MyDataContext.Provider value={[data, updateStorageData]} {...props} />
+    <MyDataContext.Provider value={[data, updateStorageData]}>
+      {props.children}
+    </MyDataContext.Provider>
   );
 }
 
 function useMyData() {
-  return useContext(MyDataContext) || [];
+  const context = useContext(MyDataContext);
+  if (!context) throw new Error("Not inside the Provider");
+  return context;
 }
 
 export { useMyData, MyDataProvider };
