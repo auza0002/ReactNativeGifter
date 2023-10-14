@@ -1,20 +1,15 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StatusBar } from "expo-status-bar";
+import { useState, useEffec } from "react";
+import { StyleSheet, Text, View } from "react-native";
+import { MyDataProvider } from "./context/AsyncStorage";
 
 export default function App() {
+  const [peopleDataList, setPeopleDataList] = useState([]);
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <MyDataProvider>
+      <View>
+        <Text>Hello asdfsdfsafs</Text>
+      </View>
+    </MyDataProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
