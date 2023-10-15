@@ -63,8 +63,28 @@ const ListItemSwipeable = ({ data }) => {
   );
 };
 const ListItemEmpty = () => {
-  <View>
-    <Text style={{ color: "red" }}>Empty</Text>
-  </View>;
+  const { theme } = useTheme();
+  console.log("ListItemEmpty");
+  return (
+    <View>
+      <Text
+        style={{
+          color: theme.colors.text.primary,
+          fontSize: theme.typography.title3.fontSize,
+          fontWeight: theme.typography.title3.fontWeight,
+        }}
+      >
+        List is empty
+      </Text>
+      <Text
+        style={{
+          color: theme.colors.text.secondary,
+          fontSize: theme.typography.body.fontSize,
+        }}
+      >
+        Ready to add people to the list!
+      </Text>
+    </View>
+  );
 };
 export { ListItemSwipeable, ListItemEmpty };

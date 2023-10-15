@@ -1,5 +1,6 @@
-import { Text, View, FlatList } from "react-native";
+import { Text, View, FlatList, Pressable } from "react-native";
 import React, { useEffect, useState } from "react";
+import { FAB } from "@rneui/themed";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useMyData } from "../../context/AsyncStorage";
 import { useTheme } from "@rneui/themed";
@@ -47,11 +48,16 @@ const PeopleScreen = ({ navigation }) => {
         >
           People list
         </Text>
-
-        <Ionicons
-          name="md-add-circle-sharp"
-          size={40}
+        <FAB
+          onPress={() => {
+            navigation.navigate("Add Screen");
+          }}
+          icon={{
+            name: "add",
+            color: theme.colors.dark,
+          }}
           color={theme.colors.yellow}
+          size="small"
         />
       </View>
       <FlatList
