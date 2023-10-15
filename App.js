@@ -13,10 +13,11 @@ const theme = createTheme({
   colors: {
     background: "#444444", // A slightly darker background color
     error: {
-      background: "#222222",
+      background: "#22222222",
       text: "#cc0000",
     },
     dark: "#000000",
+
     light: "#ffffff",
     primaryPressed: "#444444",
     delete: "#ff0000",

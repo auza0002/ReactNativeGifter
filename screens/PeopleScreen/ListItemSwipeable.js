@@ -64,7 +64,6 @@ const ListItemSwipeable = ({ data }) => {
 };
 const ListItemEmpty = () => {
   const { theme } = useTheme();
-  console.log("ListItemEmpty");
   return (
     <View>
       <Text

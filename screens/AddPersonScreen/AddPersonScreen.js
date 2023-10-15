@@ -1,10 +1,15 @@
-import { Text, View, Pressable } from "react-native";
-import React, { useEffect, useState } from "react";
+import { Text, View, Pressable, TextInput } from "react-native";
+import React, { useState } from "react";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useMyData } from "../../context/AsyncStorage";
 import { useTheme } from "@rneui/themed";
+import DatePickerScreen from "./DatePickerScreen";
 const AddPersonScreen = ({ navigation }) => {
+  const [selectedDate, setSelectedDate] = useState("");
   const [dataUser, setDataUser] = useMyData([]);
+  const [num, setNum] = useState(0);
+  const [text, onChangeText] = useState("");
+
   const { theme } = useTheme();
   return (
     <View style={{ backgroundColor: theme.colors.dark, flex: 1 }}>
@@ -52,6 +57,37 @@ const AddPersonScreen = ({ navigation }) => {
         >
           Add Person
         </Text>
+      </View>
+      <View style={{ gap: 10 }}>
+        <View
+          style={{
+            backgroundColor: theme.colors.background,
+            borderRadius: 10,
+            padding: 10,
+            justifyContent: "center",
+            alignItems: "flex-start",
+          }}
+        >
+          <TextInput
+            style={{
+              height: 60,
+              padding: 10,
+              width: "100%",
+              color: theme.colors.text.white,
+              fontSize: theme.typography.bodyLarge.fontSize,
+              borderBottomWidth: 1,
+              borderBottomColor: theme.colors.text.primary,
+            }}
+            onChangeText={onChangeText}
+            value={text}
+            placeholder="Name"
+            keyboardType="default"
+            maxLength={20}
+            placeholderTextColor={theme.colors.text.secondary}
+          />
+        </View>
+
+        <DatePickerScreen setSelectedDate={setSelectedDate} />
       </View>
     </View>
   );
