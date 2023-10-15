@@ -1,34 +1,39 @@
 import { Text, View, FlatList, Pressable } from "react-native";
 import React, { useEffect, useState } from "react";
 import { FAB } from "@rneui/themed";
-import Ionicons from "@expo/vector-icons/Ionicons";
 import { useMyData } from "../../context/AsyncStorage";
 import { useTheme } from "@rneui/themed";
 import { ListItemSwipeable, ListItemEmpty } from "./ListItemSwipeable";
+
 const PeopleScreen = ({ navigation }) => {
   const { theme } = useTheme();
   const [dataUser] = useMyData([]);
-  const sortedPeople = [...dataUser];
-  sortedPeople.sort((a, b) => {
-    const dateA = new Date(a.dob);
-    const dateB = new Date(b.dob);
-    if (dateA.getMonth() === dateB.getMonth()) {
-      return dateA.getDate() - dateB.getDate();
+
+  // Transform the data into an object with month as the key
+  const peopleGroups = dataUser.reduce((groups, person) => {
+    const [month, day] = person.dob.split("/").slice(1);
+    if (!groups[month]) {
+      groups[month] = [];
     }
-    return dateA.getMonth() - dateB.getMonth();
-  });
-  const peopleGroups = [];
-  let currentMonth = null;
-  let currentGroup = null;
-  for (const person of sortedPeople) {
-    const [month] = person.dob.split("-").slice(1);
-    if (currentMonth !== month) {
-      currentMonth = month;
-      currentGroup = [];
-      peopleGroups.push({ month, people: currentGroup });
-    }
-    currentGroup.push(person);
+    groups[month].push({ ...person, day });
+    return groups;
+  }, {});
+
+  // Sort the groups by month and day
+  for (const month in peopleGroups) {
+    peopleGroups[month].sort((a, b) => {
+      if (a.day === b.day) {
+        return 0;
+      }
+      return a.day < b.day ? -1 : 1;
+    });
   }
+
+  // Sort the months based on their numeric representation
+  const sortedMonths = Object.keys(peopleGroups).sort((a, b) => {
+    return parseInt(a) - parseInt(b);
+  });
+
   return (
     <View style={{ backgroundColor: theme.colors.dark, flex: 1 }}>
       <View
@@ -61,7 +66,10 @@ const PeopleScreen = ({ navigation }) => {
         />
       </View>
       <FlatList
-        data={peopleGroups}
+        data={sortedMonths.map((month) => ({
+          month,
+          people: peopleGroups[month],
+        }))}
         renderItem={({ item }) => <RenderItemContainer data={item} />}
         keyExtractor={(item) => {
           return `id-people-${item.month}`;
@@ -75,6 +83,8 @@ const PeopleScreen = ({ navigation }) => {
     </View>
   );
 };
+
+// Rest of your code remains the same
 
 const RenderItemContainer = ({ data }) => {
   const { theme } = useTheme();

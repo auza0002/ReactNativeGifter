@@ -19,8 +19,8 @@ const DatePickerScreen = ({ setSelectedDate }) => {
       style={{
         borderRadius: 10,
       }}
-      current={"2004-03-10"}
-      selected={"2004-03-10"}
+      current={"2004/03/10"}
+      selected={"2004/03/10"}
       maximumDate={new Date().toDateString()}
       mode="calendar"
     ></DatePicker>
