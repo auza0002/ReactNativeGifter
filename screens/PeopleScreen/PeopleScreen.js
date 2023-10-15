@@ -1,77 +1,35 @@
-import { Pressable, Text, View, FlatList } from "react-native";
-import { ListItem } from "@rneui/themed";
+import { Text, View, FlatList } from "react-native";
+import React, { useEffect, useState } from "react";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { FontAwesome5 } from "@expo/vector-icons";
 import { useMyData } from "../../context/AsyncStorage";
 import { useTheme } from "@rneui/themed";
-import { Button } from "@rneui/themed";
-import { useEffect } from "react";
+import { ListItemSwipeable, ListItemEmpty } from "./ListItemSwipeable";
 const PeopleScreen = ({ navigation }) => {
-  const { theme, updateTheme } = useTheme();
-  const [dataUser, setDataUser] = useMyData([]);
-
-  const ListItemSwipeable = ({ data }) => {
-    return (
-      <ListItem.Swipeable
-        leftWidth={80}
-        rightWidth={90}
-        minSlideWidth={40}
-        rightContent={(action) => (
-          <Button
-            containerStyle={{
-              flex: 1,
-              justifyContent: "center",
-              backgroundColor: theme.colors.deletePressed,
-            }}
-            type="clear"
-            icon={{ name: "delete-outline", color: theme.colors.text.white }}
-            onPress={action}
-          />
-        )}
-      >
-        <ListItem
-          bottomDivider
-          style={{
-            flexDirection: "row",
-          }}
-        >
-          <FontAwesome5
-            name="gifts"
-            size={24}
-            color={theme.colors.text.secondary}
-          />
-          <ListItem.Content style={{ flex: 1 }}>
-            <ListItem.Title
-              style={{
-                color: theme.colors.text.white,
-                fontSize: theme.typography.body.fontSize,
-                fontWeight: theme.typography.subtitle.fontWeight,
-              }}
-            >
-              {data.name}
-            </ListItem.Title>
-            <ListItem.Subtitle
-              style={{
-                color: theme.colors.text.primary,
-                fontSize: theme.typography.small.fontSize,
-                fontWeight: theme.typography.small.fontWeight,
-              }}
-            >
-              {data.dob}
-            </ListItem.Subtitle>
-          </ListItem.Content>
-          <ListItem.Chevron color="white" />
-        </ListItem>
-      </ListItem.Swipeable>
-    );
-  };
-  const ListItemEmpty = () => {
-    <View>
-      <Text>Empty</Text>
-    </View>;
-  };
+  const { theme } = useTheme();
+  const [dataUser] = useMyData([]);
+  const sortedPeople = [...dataUser];
+  sortedPeople.sort((a, b) => {
+    const dateA = new Date(a.dob);
+    const dateB = new Date(b.dob);
+    if (dateA.getMonth() === dateB.getMonth()) {
+      return dateA.getDate() - dateB.getDate();
+    }
+    return dateA.getMonth() - dateB.getMonth();
+  });
+  const peopleGroups = [];
+  let currentMonth = null;
+  let currentGroup = null;
+  for (const person of sortedPeople) {
+    const [month] = person.dob.split("-").slice(1);
+    if (currentMonth !== month) {
+      currentMonth = month;
+      currentGroup = [];
+      peopleGroups.push({ month, people: currentGroup });
+    }
+    currentGroup.push(person);
+  }
   return (
-    <View style={{ backgroundColor: theme.colors.background, flex: 1 }}>
+    <View style={{ backgroundColor: theme.colors.dark, flex: 1 }}>
       <View
         style={{
           flexDirection: "row",
@@ -89,6 +47,7 @@ const PeopleScreen = ({ navigation }) => {
         >
           People list
         </Text>
+
         <Ionicons
           name="md-add-circle-sharp"
           size={40}
@@ -96,53 +55,67 @@ const PeopleScreen = ({ navigation }) => {
         />
       </View>
       <FlatList
-        data={dataUser}
-        renderItem={({ item }) => (
-          <ListItemSwipeable data={item} key={item.uid} />
-        )}
+        data={peopleGroups}
+        renderItem={({ item }) => <RenderItemContainer data={item} />}
+        keyExtractor={(item) => {
+          return `id-people-${item.month}`;
+        }}
+        style={{
+          marginTop: 30,
+          backgroundColor: theme.colors.dark,
+        }}
         ListEmptyComponent={<ListItemEmpty />}
       />
     </View>
   );
 };
 
-export default PeopleScreen;
+const RenderItemContainer = ({ data }) => {
+  const { theme } = useTheme();
+  const monthNames = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
 
-// const people = [
-//   {
-//     id: "d825796c-4fc1-4879-ad86-048ece61358b999999999999999",
-//     name: "Habib",
-//     dob: "1987-07-22",
-//     ideas: [],
-//   },
-//   {
-//     id: "d825796c-4fc1-4879-ad86-048ece61358b",
-//     name: "Mr Man",
-//     dob: "1983-07-22",
-//     ideas: [],
-//   },
-//   {
-//     id: "unique-id-1",
-//     name: "John Doe",
-//     dob: "1995-05-15",
-//     ideas: [],
-//   },
-//   {
-//     id: "unique-id-2",
-//     name: "Jane Smith",
-//     dob: "1989-02-10",
-//     ideas: [],
-//   },
-//   {
-//     id: "unique-id-3",
-//     name: "Alice Johnson",
-//     dob: "2001-11-30",
-//     ideas: [],
-//   },
-//   {
-//     id: "unique-id-4",
-//     name: "Bob Johnson",
-//     dob: "1978-03-07",
-//     ideas: [],
-//   },
-// ];
+  const monthNumber = parseInt(data.month, 10);
+  const monthName = monthNames[monthNumber - 1] || "Unknown";
+  return (
+    <View
+      style={{ flex: 1, marginHorizontal: 10, paddingVertical: 15 }}
+      key={data.month}
+    >
+      <Text
+        style={{
+          color: theme.colors.text.white,
+          fontSize: theme.typography.title3.fontSize,
+          fontWeight: theme.typography.title3.fontWeight,
+        }}
+      >
+        {monthName}
+      </Text>
+      <View
+        style={{
+          borderRadius: 20,
+          overflow: "hidden",
+          marginVertical: 5,
+          backgroundColor: theme.colors.background,
+        }}
+      >
+        {data.people.map((person) => {
+          return <ListItemSwipeable data={person} key={person.id} />;
+        })}
+      </View>
+    </View>
+  );
+};
+export default PeopleScreen;

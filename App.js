@@ -1,6 +1,3 @@
-import { StatusBar } from "expo-status-bar";
-import { useState, useEffec } from "react";
-import { StyleSheet, Text, View } from "react-native";
 import PeopleScreen from "./screens/PeopleScreen/PeopleScreen";
 import IdeaScreen from "./screens/IdeaScreen/IdeaScreen";
 import AddPersonScreen from "./screens/AddPersonScreen/AddPersonScreen";
@@ -13,16 +10,14 @@ import { ThemeProvider } from "@rneui/themed";
 import { createTheme } from "@rneui/themed";
 const Stack = createNativeStackNavigator();
 const theme = createTheme({
-  mode: "dark",
   colors: {
-    mode: "dark",
-    background: "#000000", // A slightly darker background color
+    background: "#444444", // A slightly darker background color
     error: {
-      mode: "dark",
       background: "#222222",
       text: "#cc0000",
     },
-    primary: "#555555",
+    dark: "#000000",
+    light: "#ffffff",
     primaryPressed: "#444444",
     delete: "#ff0000",
     deletePressed: "#cc0000",
@@ -64,7 +59,6 @@ const theme = createTheme({
     },
   },
 });
-
 export default function App() {
   return (
     <MyDataProvider>
@@ -72,7 +66,7 @@ export default function App() {
         <SafeAreaProvider>
           <SafeAreaView
             style={{ backgroundColor: "#000000", flex: 1, padding: 10 }}
-            edges={["right", "bottom", "left", "top"]}
+            edges={["bottom", "top"]}
           >
             <NavigationContainer initialRouteName="People list">
               <Stack.Navigator screenOptions={{ headerShown: false }}>
