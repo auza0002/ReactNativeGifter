@@ -65,7 +65,12 @@ const ListItemSwipeable = ({ data }) => {
             {data.dob}
           </ListItem.Subtitle>
         </ListItem.Content>
-        <ListItem.Chevron color="white" />
+        <ListItem.Chevron
+          color="white"
+          onPress={() => {
+            console.log(data);
+          }}
+        />
       </ListItem>
     </ListItem.Swipeable>
   );
@@ -73,7 +78,11 @@ const ListItemSwipeable = ({ data }) => {
 const ListItemEmpty = () => {
   const { theme } = useTheme();
   return (
-    <View>
+    <View
+      style={{
+        marginHorizontal: 15,
+      }}
+    >
       <Text
         style={{
           color: theme.colors.text.primary,

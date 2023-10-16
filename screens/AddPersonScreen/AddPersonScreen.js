@@ -67,7 +67,7 @@ const AddPersonScreen = ({ navigation }) => {
                     color: theme.colors.text.white,
                   }}
                 >
-                  Back
+                  All list
                 </Text>
               </View>
             </View>
