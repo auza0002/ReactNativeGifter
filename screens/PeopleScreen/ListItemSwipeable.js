@@ -11,7 +11,7 @@ const ListItemSwipeable = ({ data }) => {
     <ListItem.Swipeable
       rightWidth={90}
       minSlideWidth={40}
-      rightContent={() => (
+      rightContent={(reset) => (
         <Button
           containerStyle={{
             flex: 1,
@@ -21,8 +21,11 @@ const ListItemSwipeable = ({ data }) => {
           type="clear"
           icon={{ name: "delete-outline", color: theme.colors.text.white }}
           onPress={() => {
-            const newData = dataUser.filter((item) => item.id !== data.id);
-            setDataUser(newData);
+            reset();
+            setTimeout(() => {
+              const newData = dataUser.filter((item) => item.id !== data.id);
+              setDataUser(newData);
+            }, 500);
           }}
         />
       )}
@@ -37,7 +40,12 @@ const ListItemSwipeable = ({ data }) => {
           size={24}
           color={theme.colors.text.secondary}
         />
-        <ListItem.Content style={{ flex: 1, borderRadius: 25 }}>
+        <ListItem.Content
+          style={{
+            flex: 1,
+            borderRadius: 25,
+          }}
+        >
           <ListItem.Title
             style={{
               color: theme.colors.text.white,
