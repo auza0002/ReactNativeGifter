@@ -1,5 +1,4 @@
 import { Text, View, FlatList, Pressable } from "react-native";
-import React, { useEffect, useState } from "react";
 import { FAB } from "@rneui/themed";
 import { useMyData } from "../../context/AsyncStorage";
 import { useTheme } from "@rneui/themed";
@@ -8,8 +7,6 @@ import { ListItemSwipeable, ListItemEmpty } from "./ListItemSwipeable";
 const PeopleScreen = ({ navigation }) => {
   const { theme } = useTheme();
   const [dataUser] = useMyData([]);
-
-  // Transform the data into an object with month as the key
   const peopleGroups = dataUser.reduce((groups, person) => {
     const [month, day] = person.dob.split("/").slice(1);
     if (!groups[month]) {
@@ -18,8 +15,6 @@ const PeopleScreen = ({ navigation }) => {
     groups[month].push({ ...person, day });
     return groups;
   }, {});
-
-  // Sort the groups by month and day
   for (const month in peopleGroups) {
     peopleGroups[month].sort((a, b) => {
       if (a.day === b.day) {
@@ -28,8 +23,6 @@ const PeopleScreen = ({ navigation }) => {
       return a.day < b.day ? -1 : 1;
     });
   }
-
-  // Sort the months based on their numeric representation
   const sortedMonths = Object.keys(peopleGroups).sort((a, b) => {
     return parseInt(a) - parseInt(b);
   });
@@ -124,7 +117,7 @@ const RenderItemContainer = ({ data }) => {
           borderRadius: 20,
           overflow: "hidden",
           marginVertical: 5,
-          backgroundColor: theme.colors.background,
+          backgroundColor: theme.colors.deletePressed,
         }}
       >
         {data.people.map((person) => {

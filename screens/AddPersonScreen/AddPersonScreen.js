@@ -13,6 +13,7 @@ const AddPersonScreen = ({ navigation }) => {
   const [dataUser, setDataUser] = useMyData([]);
   const [expanded, setExpanded] = useState(false);
   const [text, onChangeText] = useState("");
+
   const updateUserData = [
     ...dataUser,
     {
@@ -22,6 +23,7 @@ const AddPersonScreen = ({ navigation }) => {
       idea: [],
     },
   ];
+
   const { theme } = useTheme();
   return (
     <View
@@ -184,10 +186,7 @@ const AddPersonScreen = ({ navigation }) => {
         <Button
           onPress={() => {
             setDataUser(updateUserData);
-            // set time out to wait for the data to be updated
-            setTimeout(() => {
-              navigation.navigate("People list");
-            }, 3000);
+            navigation.navigate("People list");
           }}
           radius={"md"}
           type="solid"
