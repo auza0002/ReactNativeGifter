@@ -18,8 +18,11 @@ function MyDataProvider(props) {
     await AsyncStorage.setItem("React_Native_App_Gifter", JSON.stringify(list));
   }
 
+  function getPersonById(id) {
+    return data.find((item) => item.id === id);
+  }
   return (
-    <MyDataContext.Provider value={[data, updateStorageData]}>
+    <MyDataContext.Provider value={[data, updateStorageData, getPersonById]}>
       {props.children}
     </MyDataContext.Provider>
   );
@@ -27,6 +30,7 @@ function MyDataProvider(props) {
 
 function useMyData() {
   const context = useContext(MyDataContext);
+
   if (!context) throw new Error("Not inside the Provider");
   return context;
 }

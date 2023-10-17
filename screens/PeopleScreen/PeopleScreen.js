@@ -6,11 +6,13 @@ import { ListItemSwipeable, ListItemEmpty } from "./ListItemSwipeable";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { BlurView } from "expo-blur";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import theme from "../../theme/Theme";
 
 const PeopleScreen = ({ navigation }) => {
   const insets = useSafeAreaInsets();
   const { theme } = useTheme();
-  const [dataUser] = useMyData([]);
+  const [dataUser, setDataUser] = useMyData([]);
+  const [scroll, setscroll] = useState(0);
   const peopleGroups = dataUser.reduce((groups, person) => {
     const [month, day] = person.dob.split("/").slice(1);
     if (!groups[month]) {
@@ -30,33 +32,29 @@ const PeopleScreen = ({ navigation }) => {
   const sortedMonths = Object.keys(peopleGroups).sort((a, b) => {
     return parseInt(a) - parseInt(b);
   });
-  const [scrollvalue, setScrollValue] = useState(0);
-  const scrollEvent = (ev) => {
-    setScrollValue(ev.nativeEvent.contentOffset.y);
+  const scrollEvent = (event) => {
+    setscroll(event.nativeEvent.contentOffset.y);
   };
   return (
     <>
       <BlurView
         style={{
           zIndex: 10000,
-          backgroundColor: scrollvalue > 30 ? "transparent" : theme.colors.dark,
+          backgroundColor: scroll > 25 ? "transparent" : theme.colors.dark,
           top: 0,
           position: "absolute",
           height: insets.top,
           width: "100%",
           alignItems: "center",
-          flexDirection: "row",
-          paddingBottom: insets.bottom,
-          justifyContent: "center",
+          justifyContent: "flex-end",
         }}
-        intensity={scrollvalue > 30 ? 70 : 0}
+        intensity={scroll > 25 ? 70 : 0}
         tint="dark"
       ></BlurView>
       <View
         style={{
           zIndex: 0,
           flex: 1,
-          // paddingTop: insets.top,
           backgroundColor: theme.colors.dark,
         }}
       >
@@ -65,22 +63,19 @@ const PeopleScreen = ({ navigation }) => {
             month,
             people: peopleGroups[month],
           }))}
-          ListHeaderComponent={<HeaderItemContainer navigation={navigation} />}
+          ListHeaderComponent={<HeaderItemContainer />}
           renderItem={({ item }) => (
             <RenderItemContainer data={item} navigation={navigation} />
           )}
           keyExtractor={(item) => {
             return `id-people-${item.month}`;
           }}
-          style={{
-            backgroundColor: "red",
-            paddingTop: insets.top,
-            backgroundColor: theme.colors.dark,
-          }}
-          onScroll={(ev) => {
-            scrollEvent(ev);
-          }}
           ListEmptyComponent={<ListItemEmpty />}
+          ListFooterComponent={dataUser.length != 0 ? <EndComponent /> : null}
+          onScroll={scrollEvent}
+          style={{
+            marginHorizontal: 20,
+          }}
         />
       </View>
       <BlurView
@@ -146,7 +141,10 @@ const RenderItemContainer = ({ data, navigation }) => {
   return (
     <>
       <View
-        style={{ flex: 1, marginHorizontal: 20, paddingVertical: 15 }}
+        style={{
+          flex: 1,
+          paddingVertical: 5,
+        }}
         key={data.month}
       >
         <Text
@@ -162,24 +160,33 @@ const RenderItemContainer = ({ data, navigation }) => {
           style={{
             borderRadius: 20,
             overflow: "hidden",
-            marginVertical: 15,
+            marginVertical: 10,
             backgroundColor: theme.colors.deletePressed,
           }}
         >
           {data.people.map((person) => {
-            return <ListItemSwipeable data={person} key={person.id} />;
+            return (
+              <ListItemSwipeable
+                data={person}
+                key={person.id}
+                navigation={navigation}
+              />
+            );
           })}
         </View>
       </View>
     </>
   );
 };
-const HeaderItemContainer = ({ navigation }) => {
+const HeaderItemContainer = () => {
   const { theme } = useTheme();
   return (
     <View
       style={{
-        padding: 10,
+        paddingVertical: 10,
+        marginTop: 60,
+        borderBottomColor: theme.colors.background,
+        borderBottomWidth: 2,
       }}
     >
       <Text
@@ -190,6 +197,32 @@ const HeaderItemContainer = ({ navigation }) => {
         }}
       >
         People list
+      </Text>
+    </View>
+  );
+};
+const EndComponent = () => {
+  const { theme } = useTheme();
+  return (
+    <View
+      style={{
+        marginBottom: 100,
+        marginVertical: 10,
+        justifyContent: "center",
+        alignItems: "center",
+        borderTopColor: theme.colors.background,
+        borderTopWidth: 1,
+      }}
+    >
+      <Text
+        style={{
+          color: theme.colors.text.secondary,
+          padding: 10,
+          fontSize: theme.typography.small.fontSize,
+          fontWeight: theme.typography.small.fontWeight,
+        }}
+      >
+        End of the list
       </Text>
     </View>
   );

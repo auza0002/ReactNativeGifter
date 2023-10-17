@@ -2,6 +2,7 @@ import { createTheme } from "@rneui/themed";
 const theme = createTheme({
   colors: {
     background: "#444444",
+
     error: {
       background: "#22222222",
       text: "#cc0000",
@@ -41,11 +42,11 @@ const theme = createTheme({
     },
     bodyLarge: {
       fontSize: 22,
-      fontWeight: "normal",
+      fontWeight: "bold",
     },
     small: {
       fontSize: 12,
-      fontWeight: "normal",
+      fontWeight: "bold",
     },
   },
 });

@@ -4,7 +4,8 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import { useMyData } from "../../context/AsyncStorage";
 import { Button } from "@rneui/themed";
 import { View, Text } from "react-native";
-const ListItemSwipeable = ({ data }) => {
+
+const ListItemSwipeable = ({ data, navigation, setSwipeable }) => {
   const [dataUser, setDataUser] = useMyData([]);
   const { theme } = useTheme();
   return (
@@ -25,7 +26,7 @@ const ListItemSwipeable = ({ data }) => {
             setTimeout(() => {
               const newData = dataUser.filter((item) => item.id !== data.id);
               setDataUser(newData);
-            }, 500);
+            }, 800);
           }}
         />
       )}
@@ -68,7 +69,7 @@ const ListItemSwipeable = ({ data }) => {
         <ListItem.Chevron
           color="white"
           onPress={() => {
-            console.log(data);
+            navigation.navigate("Idea Screen", { id: data.id });
           }}
         />
       </ListItem>

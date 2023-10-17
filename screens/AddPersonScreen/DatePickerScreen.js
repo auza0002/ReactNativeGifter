@@ -13,13 +13,14 @@ const DatePickerScreen = ({ setSelectedDate }) => {
         textDefaultColor: theme.colors.text.primary,
         selectedTextColor: theme.colors.text.white,
         mainColor: theme.colors.dark, //arrows
-        textSecondaryColor: theme.colors.text.secondary, //dow
-        borderColor: theme.colors.primaryPressed,
+
+        textSecondaryColor: theme.colors.text.secondary,
+        borderColor: theme.colors.light,
       }}
       style={{
         borderRadius: 10,
       }}
-      current={"2004/03/10"}
+      current={"2004/03/01"}
       selected={"2004/03/10"}
       maximumDate={new Date().toDateString()}
       mode="calendar"

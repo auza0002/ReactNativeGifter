@@ -19,10 +19,23 @@ export default function App() {
             <Stack.Navigator>
               <Stack.Group screenOptions={{ headerShown: false }}>
                 <Stack.Screen name="People list" component={PeopleScreen} />
-              </Stack.Group>
-              <Stack.Group>
-                <Stack.Screen name="Add Screen" component={AddPersonScreen} />
                 <Stack.Screen name="Idea Screen" component={IdeaScreen} />
+              </Stack.Group>
+
+              <Stack.Group
+                screenOptions={{
+                  presentation: "modal",
+                  title: "Add Person",
+                  headerShown: false,
+                  cardStyle: { backgroundColor: "transparent" },
+                  cardStyleInterpolator: ({ current: { progress } }) => ({
+                    cardStyle: {
+                      backgroundColor: "rgba(0, 0, 0, " + progress + ")",
+                    },
+                  }),
+                }}
+              >
+                <Stack.Screen name="Add Screen" component={AddPersonScreen} />
                 <Stack.Screen
                   name="Add Idea Screen"
                   component={AddIdeaScreen}

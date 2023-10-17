@@ -1,6 +1,5 @@
 import { Text, View, Pressable, TextInput } from "react-native";
 import React, { useState } from "react";
-import Ionicons from "@expo/vector-icons/Ionicons";
 import { Icon } from "@rneui/themed";
 import { useMyData } from "../../context/AsyncStorage";
 import { useTheme } from "@rneui/themed";
@@ -8,22 +7,23 @@ import { Button } from "@rneui/themed";
 import DatePickerScreen from "./DatePickerScreen";
 import { ListItem } from "@rneui/themed";
 import uuid from "react-native-uuid";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 const AddPersonScreen = ({ navigation }) => {
   const [selectedDate, setSelectedDate] = useState("2004/03/10");
   const [dataUser, setDataUser] = useMyData([]);
   const [expanded, setExpanded] = useState(false);
-  const [text, onChangeText] = useState("");
-
+  const [validInput, setValidInput] = useState(false);
+  const [text, setText] = useState("");
   const updateUserData = [
     ...dataUser,
     {
       id: uuid.v4(),
-      name: text ? text : "Person",
+      name: text,
       dob: selectedDate,
       idea: [],
     },
   ];
-
+  const insets = useSafeAreaInsets();
   const { theme } = useTheme();
   return (
     <View
@@ -32,46 +32,21 @@ const AddPersonScreen = ({ navigation }) => {
         flex: 1,
         alignContent: "space-between",
         justifyContent: "space-between",
+        borderColor: theme.colors.background,
+        borderTopWidth: 3,
+        paddingBottom: insets.bottom,
+        paddingHorizontal: 15,
       }}
     >
       <View>
         <View
           style={{
             flexDirection: "row",
-            justifyContent: "space-between",
+            justifyContent: "center",
             alignItems: "center",
-            padding: 10,
+            margin: 10,
           }}
         >
-          <Pressable
-            onPress={() => {
-              navigation.navigate("People list");
-            }}
-          >
-            <View
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-              }}
-            >
-              <Ionicons
-                name="chevron-back-outline"
-                size={24}
-                color={theme.colors.light}
-              />
-              <View
-                style={{ borderBottomColor: "white", borderBottomWidth: 1 }}
-              >
-                <Text
-                  style={{
-                    color: theme.colors.text.white,
-                  }}
-                >
-                  All list
-                </Text>
-              </View>
-            </View>
-          </Pressable>
           <Text
             style={{
               color: theme.colors.text.white,
@@ -82,17 +57,7 @@ const AddPersonScreen = ({ navigation }) => {
             Add Person
           </Text>
         </View>
-        <View style={{ gap: 10, padding: 10 }}>
-          <View>
-            <Text
-              style={{
-                color: theme.colors.text.secondary,
-                fontSize: theme.typography.body.small,
-              }}
-            >
-              Add a person to your list. You can add a name and a date of birth.
-            </Text>
-          </View>
+        <View style={{ gap: 20 }}>
           <View
             style={{
               backgroundColor: theme.colors.background,
@@ -104,7 +69,6 @@ const AddPersonScreen = ({ navigation }) => {
           >
             <TextInput
               style={{
-                height: 60,
                 padding: 10,
                 width: "100%",
                 color: theme.colors.text.white,
@@ -112,7 +76,16 @@ const AddPersonScreen = ({ navigation }) => {
                 borderBottomWidth: 1,
                 borderBottomColor: theme.colors.text.primary,
               }}
-              onChangeText={onChangeText}
+              onChangeText={(ev) => {
+                if (text.trim() === "") {
+                  setValidInput(false);
+                } else if (text.length == 0) {
+                  setValidInput(false);
+                } else {
+                  setValidInput(true);
+                }
+                setText(ev);
+              }}
               value={text}
               placeholder="Name"
               keyboardType="default"
@@ -164,7 +137,7 @@ const AddPersonScreen = ({ navigation }) => {
         style={{
           flexDirection: "row",
           padding: 10,
-          justifyContent: "space-evenly",
+          justifyContent: "space-between",
         }}
       >
         <Button
@@ -174,27 +147,29 @@ const AddPersonScreen = ({ navigation }) => {
           size="lg"
           radius={"md"}
           title="Cancel"
-          type="outline"
-          buttonStyle={{
-            borderColor: "red",
-            borderWidth: 2,
-          }}
+          type="clear"
           titleStyle={{
             color: "red",
           }}
         />
         <Button
           onPress={() => {
-            setDataUser(updateUserData);
-            navigation.navigate("People list");
+            if (validInput) {
+              setDataUser(updateUserData);
+              navigation.navigate("People list");
+            } else {
+              navigation.navigate("People list");
+            }
           }}
-          radius={"md"}
-          type="solid"
-          color={"blue"}
+          radius={"lg"}
+          type="clear"
+          color={"white"}
           size="lg"
+          titleStyle={{
+            color: theme.colors.yellow,
+          }}
         >
-          Save
-          <Icon name="save" color="white" />
+          {validInput ? "Save" : "Done"}
         </Button>
       </View>
     </View>
