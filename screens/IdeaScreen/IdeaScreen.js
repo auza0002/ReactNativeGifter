@@ -50,7 +50,7 @@ const IdeaScreen = ({ navigation, route }) => {
                 fontWeight: theme.typography.small.fontWeight,
               }}
             >
-              People list
+              All list
             </Text>
           </View>
         </Pressable>

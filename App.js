@@ -2,6 +2,7 @@ import PeopleScreen from "./screens/PeopleScreen/PeopleScreen";
 import IdeaScreen from "./screens/IdeaScreen/IdeaScreen";
 import AddPersonScreen from "./screens/AddPersonScreen/AddPersonScreen";
 import AddIdeaScreen from "./screens/AddIdeaScreen/AddIdeaScreen";
+import CameraIdea from "./screens/AddIdeaScreen/Camera.Idea";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { MyDataProvider } from "./context/AsyncStorage";
@@ -20,8 +21,11 @@ export default function App() {
               <Stack.Group screenOptions={{ headerShown: false }}>
                 <Stack.Screen name="People list" component={PeopleScreen} />
                 <Stack.Screen name="Idea Screen" component={IdeaScreen} />
+                <Stack.Screen
+                  name="Add Idea Screen"
+                  component={AddIdeaScreen}
+                />
               </Stack.Group>
-
               <Stack.Group
                 screenOptions={{
                   presentation: "modal",
@@ -36,10 +40,7 @@ export default function App() {
                 }}
               >
                 <Stack.Screen name="Add Screen" component={AddPersonScreen} />
-                <Stack.Screen
-                  name="Add Idea Screen"
-                  component={AddIdeaScreen}
-                />
+                <Stack.Screen name="Camera Screen" component={CameraIdea} />
               </Stack.Group>
             </Stack.Navigator>
           </NavigationContainer>
