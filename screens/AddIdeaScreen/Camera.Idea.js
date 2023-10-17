@@ -26,9 +26,7 @@ const CameraIdea = ({ navigation, route }) => {
       setHasPermission(cameraStatus.status === "granted");
     })();
   }, []);
-  const closeModal = () => {
-    navigation.goBack();
-  };
+
   useEffect(() => {
     if (!isModalOpen) {
       if (cameraRef.current) {
@@ -55,6 +53,17 @@ const CameraIdea = ({ navigation, route }) => {
       }
     }
   };
+  const savePicture = async () => {
+    if (image) {
+      try {
+        await MediaLibrary.createAssetAsync(image);
+        alert("Image saved");
+        setImage(null);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
   if (hasPermission === false) {
     return <Text>No acces to camera</Text>;
   }
@@ -74,7 +83,9 @@ const CameraIdea = ({ navigation, route }) => {
               left: 20,
               zIndex: 100,
             }}
-            onPress={closeModal}
+            onPress={() => {
+              navigation.goBack();
+            }}
           >
             <FontAwesome
               name="chevron-down"
@@ -90,8 +101,24 @@ const CameraIdea = ({ navigation, route }) => {
               flexDirection: "column",
             }}
           >
-            <Text style={{ color: theme.colors.text.white }}>{user.name}</Text>
-            <Text>Image gift</Text>
+            <Text
+              style={{
+                color: theme.colors.text.white,
+                fontSize: theme.typography.bodyLarge.fontSize,
+                fontWeight: theme.typography.bodyLarge.fontWeight,
+              }}
+            >
+              {user.name}
+            </Text>
+            <Text
+              style={{
+                color: theme.colors.primaryPressed,
+                fontSize: theme.typography.body.fontSize,
+                fontWeight: theme.typography.bodyLarge.fontWeight,
+              }}
+            >
+              Image gift
+            </Text>
           </View>
           <View
             onPress={takePicture}
@@ -188,6 +215,7 @@ const CameraIdea = ({ navigation, route }) => {
               }}
               onPress={() => {
                 console.log("image save");
+                savePicture();
               }}
             >
               <FontAwesome
