@@ -15,6 +15,7 @@ const PeopleScreen = ({ navigation }) => {
   const [scroll, setscroll] = useState(0);
   const peopleGroups = dataUser.reduce((groups, person) => {
     const [month, day] = person.dob.split("/").slice(1);
+
     if (!groups[month]) {
       groups[month] = [];
     }
@@ -87,10 +88,10 @@ const PeopleScreen = ({ navigation }) => {
           position: "absolute",
           height: 80,
           width: "100%",
-          alignItems: "center",
           flexDirection: "row",
           paddingBottom: insets.bottom,
           justifyContent: "center",
+          alignItems: "center",
         }}
         intensity={dataUser.length > 5 ? 70 : 0}
         tint="dark"

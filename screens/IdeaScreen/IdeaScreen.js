@@ -1,9 +1,12 @@
 import { useMyData } from "../../context/AsyncStorage";
+import { Avatar } from "@rneui/themed";
 import { useTheme } from "@rneui/themed";
-import { Pressable, Text, View } from "react-native";
+import { Button } from "@rneui/themed";
+import { FlatList, Pressable, Text, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { SimpleLineIcons } from "@expo/vector-icons";
+import { ListItem } from "@rneui/themed";
 const IdeaScreen = ({ navigation, route }) => {
   const [dataUser, setDataUser, getPersonById] = useMyData([]);
   const insets = useSafeAreaInsets();
@@ -121,6 +124,7 @@ const IdeaScreen = ({ navigation, route }) => {
             {user.dob}
           </Text>
         </View>
+
         <View
           style={{
             flexDirection: "row",
@@ -146,6 +150,24 @@ const IdeaScreen = ({ navigation, route }) => {
             {user.idea.length}
           </Text>
         </View>
+      </View>
+
+      <View
+        style={{
+          flex: 1,
+          marginTop: 15,
+          marginHorizontal: 20,
+          marginBottom: 60,
+        }}
+      >
+        <FlatList
+          data={user.idea}
+          renderItem={({ item }) => (
+            <RenderItemContainer data={item} personId={id} />
+          )}
+          keyExtractor={(item) => item.id}
+          ListEmptyComponent={<ListItemEmpty />}
+        />
       </View>
       <View
         style={{
@@ -184,3 +206,80 @@ const IdeaScreen = ({ navigation, route }) => {
   );
 };
 export default IdeaScreen;
+const RenderItemContainer = ({ data, personId }) => {
+  const [
+    dataUser,
+    setDataUser,
+    getPersonById,
+    updatePersonIdea,
+    deletePersonIdea,
+  ] = useMyData([]);
+
+  const { theme } = useTheme();
+  return (
+    <>
+      <ListItem.Swipeable
+        leftWidth={80}
+        rightWidth={90}
+        minSlideWidth={40}
+        rightContent={(reset) => (
+          <Button
+            containerStyle={{
+              flex: 1,
+              justifyContent: "center",
+              backgroundColor: theme.colors.deletePressed,
+            }}
+            type="clear"
+            icon={{
+              name: "delete-outline",
+              color: theme.colors.text.white,
+            }}
+            onPress={() => {
+              reset();
+              setTimeout(() => {
+                deletePersonIdea(personId, data.id);
+              }, 800);
+            }}
+          />
+        )}
+      >
+        {data.image == null ? (
+          <Avatar
+            rounded
+            icon={{
+              name: "person-outline",
+              type: "material",
+              size: 26,
+            }}
+            containerStyle={{ backgroundColor: "#c2c2c2" }}
+          />
+        ) : (
+          <Avatar
+            rounded
+            source={{ uri: "https://randomuser.me/api/portraits/men/36.jpg" }}
+          />
+        )}
+
+        <ListItem.Content>
+          <ListItem.Title>{data.text}</ListItem.Title>
+          <ListItem.Subtitle>Gift Idea</ListItem.Subtitle>
+        </ListItem.Content>
+      </ListItem.Swipeable>
+    </>
+  );
+};
+const ListItemEmpty = () => {
+  const { theme } = useTheme();
+  return (
+    <View>
+      <Text
+        style={{
+          color: theme.colors.text.secondary,
+          fontSize: theme.typography.body.fontSize,
+        }}
+      >
+        Ready to add gifts to the list!
+      </Text>
+    </View>
+  );
+};

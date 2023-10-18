@@ -20,7 +20,10 @@ const ListItemSwipeable = ({ data, navigation, setSwipeable }) => {
             backgroundColor: theme.colors.deletePressed,
           }}
           type="clear"
-          icon={{ name: "delete-outline", color: theme.colors.text.white }}
+          icon={{
+            name: "delete-outline",
+            color: theme.colors.text.white,
+          }}
           onPress={() => {
             reset();
             setTimeout(() => {
@@ -68,6 +71,13 @@ const ListItemSwipeable = ({ data, navigation, setSwipeable }) => {
         </ListItem.Content>
         <ListItem.Chevron
           color="white"
+          containerStyle={{
+            width: 30,
+            height: 30,
+          }}
+          iconStyle={{
+            fontSize: 30,
+          }}
           onPress={() => {
             navigation.navigate("Idea Screen", { id: data.id });
           }}

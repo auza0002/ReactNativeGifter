@@ -21,8 +21,47 @@ function MyDataProvider(props) {
   function getPersonById(id) {
     return data.find((item) => item.id === id);
   }
+  async function updatePersonIdea(id, newIdea) {
+    const newData = data.map((item) => {
+      if (item.id === id) {
+        return {
+          ...item,
+          idea: [...item.idea, newIdea],
+        };
+      }
+      return item;
+    });
+    setData(newData);
+    await AsyncStorage.setItem(
+      "React_Native_App_Gifter",
+      JSON.stringify(newData)
+    );
+  }
+
+  function deletePersonIdea(id, ideaId) {
+    const newData = data.map((item) => {
+      if (item.id === id) {
+        return {
+          ...item,
+          idea: item.idea.filter((idea) => idea.id !== ideaId),
+        };
+      }
+      return item;
+    });
+    setData(newData);
+    AsyncStorage.setItem("React_Native_App_Gifter", JSON.stringify(newData));
+  }
+
   return (
-    <MyDataContext.Provider value={[data, updateStorageData, getPersonById]}>
+    <MyDataContext.Provider
+      value={[
+        data,
+        updateStorageData,
+        getPersonById,
+        updatePersonIdea,
+        deletePersonIdea,
+      ]}
+    >
       {props.children}
     </MyDataContext.Provider>
   );

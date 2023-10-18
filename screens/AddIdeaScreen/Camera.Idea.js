@@ -1,7 +1,14 @@
 import { Camera, CameraType } from "expo-camera";
 import * as MediaLibrary from "expo-media-library";
 import React, { useState, useEffect, useRef } from "react";
-import { Text, View, Pressable, StyleSheet, Image } from "react-native";
+import {
+  Text,
+  View,
+  Pressable,
+  StyleSheet,
+  Image,
+  Dimensions,
+} from "react-native"; // Import Dimensions
 import { useFocusEffect } from "@react-navigation/native";
 import { useTheme } from "@rneui/themed";
 import { FontAwesome } from "@expo/vector-icons";
@@ -18,7 +25,10 @@ const CameraIdea = ({ navigation, route }) => {
   const [type, setType] = useState(Camera.Constants.Type.back);
   const [flashMode, setFlashMode] = useState(Camera.Constants.FlashMode.off);
   const [image, setImage] = useState(null);
+  const [imageWidth, setImageWidth] = useState(null);
+  const [imageHeight, setImageHeight] = useState(null);
   const cameraRef = useRef(null);
+
   useEffect(() => {
     (async () => {
       MediaLibrary.requestPermissionsAsync();
@@ -43,35 +53,54 @@ const CameraIdea = ({ navigation, route }) => {
       };
     }, [])
   );
+
   const takePicture = async () => {
     if (cameraRef) {
       try {
         const data = await cameraRef.current.takePictureAsync();
         setImage(data.uri);
+
+        const screenWidth = Dimensions.get("window").width;
+        const imageWidth = screenWidth * (0.5 + Math.random() * 0.2);
+        const imageHeight = imageWidth * (2 / 3);
+        setImageWidth(imageWidth);
+        setImageHeight(imageHeight);
       } catch (error) {
         console.log(error);
       }
     }
   };
-  const savePicture = async () => {
+  const downloadPicture = async () => {
     if (image) {
       try {
-        await MediaLibrary.createAssetAsync(image);
-        alert("Image saved");
-        setImage(null);
+        await MediaLibrary.saveToLibraryAsync(image);
+        alert("Image saved to library");
       } catch (error) {
-        console.log(error);
+        alert("Error saving image");
       }
+    }
+  };
+  const savePicture = () => {
+    if (image) {
+      navigation.navigate("Add Idea Screen", { image: image, id: id });
+      setImage(null);
     }
   };
   if (hasPermission === false) {
-    return <Text>No acces to camera</Text>;
+    alert("No access to camera");
   }
   return (
     <View style={styles.container}>
       {!image ? (
         <Camera
-          style={[styles.camera, { justifyContent: "space-between" }]}
+          style={[
+            styles.camera,
+            {
+              justifyContent: "space-between",
+              width: imageWidth,
+              height: imageHeight,
+            },
+          ]}
           type={type}
           flashMode={flashMode}
           ref={cameraRef}
@@ -121,7 +150,9 @@ const CameraIdea = ({ navigation, route }) => {
             </Text>
           </View>
           <View
-            onPress={takePicture}
+            onPress={() => {
+              takePicture();
+            }}
             style={{
               flexDirection: "row",
               alignItems: "center",
@@ -132,6 +163,9 @@ const CameraIdea = ({ navigation, route }) => {
           >
             <Pressable
               onPress={() => {
+                if (hasPermission === false) {
+                  return;
+                }
                 type === Camera.Constants.Type.front
                   ? setType(Camera.Constants.Type.back)
                   : setType(Camera.Constants.Type.front);
@@ -143,7 +177,14 @@ const CameraIdea = ({ navigation, route }) => {
                 color={theme.colors.text.white}
               />
             </Pressable>
-            <Pressable onPress={takePicture}>
+            <Pressable
+              onPress={() => {
+                if (hasPermission === false) {
+                  return;
+                }
+                takePicture();
+              }}
+            >
               <View
                 style={{
                   width: 60,
@@ -157,6 +198,9 @@ const CameraIdea = ({ navigation, route }) => {
             </Pressable>
             <Pressable
               onPress={() => {
+                if (hasPermission === false) {
+                  return;
+                }
                 flashMode === Camera.Constants.FlashMode.torch
                   ? setFlashMode(Camera.Constants.FlashMode.off)
                   : setFlashMode(Camera.Constants.FlashMode.torch);
@@ -201,10 +245,22 @@ const CameraIdea = ({ navigation, route }) => {
                 borderBottomWidth: 1,
               }}
               onPress={() => {
+                setImage(null);
                 navigation.goBack();
               }}
             >
               <Text style={{ color: theme.colors.yellow }}>Cancel</Text>
+            </Pressable>
+            <Pressable
+              onPress={() => {
+                downloadPicture();
+              }}
+            >
+              <MaterialIcons
+                name="file-download"
+                size={30}
+                color={theme.colors.text.white}
+              />
             </Pressable>
             <Pressable
               style={{
@@ -214,7 +270,6 @@ const CameraIdea = ({ navigation, route }) => {
                 gap: 10,
               }}
               onPress={() => {
-                console.log("image save");
                 savePicture();
               }}
             >
