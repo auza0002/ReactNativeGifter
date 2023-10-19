@@ -7,6 +7,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { SimpleLineIcons } from "@expo/vector-icons";
 import { ListItem } from "@rneui/themed";
+import { color } from "@rneui/base";
 const IdeaScreen = ({ navigation, route }) => {
   const [dataUser, setDataUser, getPersonById] = useMyData([]);
   const insets = useSafeAreaInsets();
@@ -247,22 +248,30 @@ const RenderItemContainer = ({ data, personId }) => {
           <Avatar
             rounded
             icon={{
-              name: "person-outline",
-              type: "material",
+              name: "gift-outline",
+              type: "ionicon",
               size: 26,
             }}
             containerStyle={{ backgroundColor: "#c2c2c2" }}
           />
         ) : (
-          <Avatar
-            rounded
-            source={{ uri: "https://randomuser.me/api/portraits/men/36.jpg" }}
-          />
+          <Avatar rounded source={{ uri: `${data.image}` }} />
         )}
 
         <ListItem.Content>
-          <ListItem.Title>{data.text}</ListItem.Title>
-          <ListItem.Subtitle>Gift Idea</ListItem.Subtitle>
+          <ListItem.Title
+            numberOfLines={2}
+            ellipsizeMode="tail"
+            style={{
+              color: theme.colors.text.white,
+              fontWeight: theme.typography.bodyLarge.fontWeight,
+            }}
+          >
+            {data.text == "" ? "..." : data.text}
+          </ListItem.Title>
+          <ListItem.Subtitle style={{ color: theme.colors.text.secondary }}>
+            Gift Idea
+          </ListItem.Subtitle>
         </ListItem.Content>
       </ListItem.Swipeable>
     </>
