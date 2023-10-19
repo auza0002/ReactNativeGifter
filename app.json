@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "ReactNativeGifter",
-    "slug": "ReactNativeGifter",
+    "slug": "diegoauzagift",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -11,7 +11,9 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true
     },
@@ -19,7 +21,11 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -31,6 +37,18 @@
           "cameraPermission": "Allow Gifter to access your camera."
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "53d65c80-0d1d-42a4-b5bf-aaf1791783a8"
+      }
+    },
+    "owner": "diegoauza",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/53d65c80-0d1d-42a4-b5bf-aaf1791783a8"
+    }
   }
 }

@@ -7,7 +7,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { BlurView } from "expo-blur";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import theme from "../../theme/Theme";
-
+// expo dev
 const PeopleScreen = ({ navigation }) => {
   const insets = useSafeAreaInsets();
   const { theme } = useTheme();
