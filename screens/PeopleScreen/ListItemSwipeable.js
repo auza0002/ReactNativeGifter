@@ -6,7 +6,14 @@ import { Button } from "@rneui/themed";
 import { View, Text } from "react-native";
 
 const ListItemSwipeable = ({ data, navigation, setSwipeable }) => {
-  const [dataUser, setDataUser] = useMyData([]);
+  const [
+    dataUser,
+    setDataUser,
+    getPersonById,
+    updatePersonIdea,
+    deletePersonIdea,
+    deletePersonById,
+  ] = useMyData([]);
   const { theme } = useTheme();
   return (
     <ListItem.Swipeable
@@ -27,8 +34,8 @@ const ListItemSwipeable = ({ data, navigation, setSwipeable }) => {
           onPress={() => {
             reset();
             setTimeout(() => {
-              const newData = dataUser.filter((item) => item.id !== data.id);
-              setDataUser(newData);
+              deletePersonById(data.id);
+
             }, 800);
           }}
         />

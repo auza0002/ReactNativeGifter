@@ -17,7 +17,11 @@ function MyDataProvider(props) {
     setData(list);
     await AsyncStorage.setItem("React_Native_App_Gifter", JSON.stringify(list));
   }
-
+  function deletePersonById(id) {
+    const newData = data.filter((item) => item.id !== id);
+    setData(newData);
+    AsyncStorage.setItem("React_Native_App_Gifter", JSON.stringify(newData));
+  }
   function getPersonById(id) {
     return data.find((item) => item.id === id);
   }
@@ -60,6 +64,7 @@ function MyDataProvider(props) {
         getPersonById,
         updatePersonIdea,
         deletePersonIdea,
+        deletePersonById,
       ]}
     >
       {props.children}
