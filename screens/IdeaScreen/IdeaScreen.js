@@ -302,7 +302,7 @@ const RenderItemContainer = ({ data, personId }) => {
           title={`Delete`}
         />
         <Text style={{ color: "white" }}>
-          This acction will delete the person idea
+          This action will delete the person idea
         </Text>
         <Dialog.Actions>
           <Dialog.Button

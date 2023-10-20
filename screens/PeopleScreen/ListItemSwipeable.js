@@ -20,6 +20,7 @@ const ListItemSwipeable = ({ data, navigation, setSwipeable }) => {
   const toggleDialog = () => {
     setVisible(!visible);
   };
+
   return (
     <>
       <Dialog
