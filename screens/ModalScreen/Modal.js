@@ -2,7 +2,8 @@ import { useMyData } from "../../context/AsyncStorage";
 import { useTheme } from "@rneui/themed";
 import { View, Text } from "react-native";
 import { Dialog } from "@rneui/themed";
-const DeleteModal = ({ setModal, id, name }) => {
+import { useState } from "react";
+const DeleteModal = ({ id, name }) => {
   const [
     dataUser,
     setDataUser,
@@ -20,23 +21,31 @@ const DeleteModal = ({ setModal, id, name }) => {
   return (
     <>
       <Dialog isVisible={visible} onBackdropPress={toggleDialog}>
-        <Dialog.Title title="Dialog Title" />
-        <Text>Dialog body text. Add relevant information here.</Text>
-        <Dialog.Actions>
-          <Dialog.Button
-            title={`Delete Person : ${name}`}
-            onPress={() => {
-              toggleDialog();
-              deletePersonById(id);
-            }}
-          />
-          <Dialog.Button
-            title="Cancel"
-            onPress={() => {
-              toggleDialog();
-            }}
-          />
-        </Dialog.Actions>
+        <View style={{ backgroundColor: "red" }}>
+          <Dialog.Title title="Dialog Title" />
+          <Text style={{ color: "white" }}>
+            Are you sure you want to delete this person? : {name}
+          </Text>
+          <Dialog.Actions>
+            <Dialog.Button
+              style={{
+                color: "red",
+                backgroundColor: "white",
+              }}
+              title={`Delete`}
+              onPress={() => {
+                toggleDialog();
+                deletePersonById(id);
+              }}
+            />
+            <Dialog.Button
+              title="Cancel"
+              onPress={() => {
+                toggleDialog();
+              }}
+            />
+          </Dialog.Actions>
+        </View>
       </Dialog>
     </>
   );
